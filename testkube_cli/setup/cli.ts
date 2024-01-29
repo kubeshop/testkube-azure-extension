@@ -10,3 +10,5 @@ const setupCLI = () => {
   const architecture = detectArchitecture();
   const system = detectSystem();
 };
+
+const installCLI = () => {};

@@ -1,4 +1,6 @@
 import * as os from "os";
+import fetch from "node-fetch";
+import { getConfig } from "./config";
 
 const architectureMapping: Record<string, string> = {
   x86_64: "x86_64",
@@ -30,4 +32,40 @@ export const detectSystem = () => {
     throw new Error("We do not support this OS yet.");
   }
   return system;
+};
+
+export const detectLatestVersion = async () => {
+  const config = getConfig();
+
+  let version = config.version;
+
+  if (config.version) {
+    version = config.version.replace(/^v/, "");
+    process.stdout.write(`Forcing "${version} version...\n`);
+  } else {
+    process.stdout.write(`Detecting the latest version for minimum of "${config.channel}" channel...\n`);
+    if (config.channel === "stable") {
+      const releaseResponse = await fetch("https://api.github.com/repos/kubeshop/testkube/releases/latest");
+      const release = (await releaseResponse.json()) as any;
+      version = release?.tag_name;
+    } else {
+      const channels = ["stable", config.channel];
+      process.stdout.write(`Detecting the latest version for minimum of "${config.channel}" channel...\n`);
+
+      const releasesResponse = await fetch("https://api.github.com/repos/kubeshop/testkube/releases");
+      const releases = (await releasesResponse.json()) as any[];
+      const versions = releases.map((release) => ({
+        tag: release.tag_name,
+        channel: release.tag_name.match(/-([^0-9]+)/)?.[1] || "stable",
+      }));
+      version = versions.find(({ channel }) => channels.includes(channel))?.tag;
+    }
+    if (!version) {
+      throw new Error("Not found any version matching criteria.");
+    }
+    version = version.replace(/^v/, "");
+    process.stdout.write(`   Latest version: ${version}\n`);
+  }
+
+  return version;
 };

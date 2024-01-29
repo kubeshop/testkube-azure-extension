@@ -41,5 +41,27 @@ export function getConfig(): Config {
     }
   }
 
+  // Detect if there is kubectl installed
+  if (mode === "kubectl") {
+    const hasKubectl = isKubectlInstalled();
+    process.stdout.write(`kubectl: ${hasKubectl ? "detected" : "not available"}.\n`);
+    if (!hasKubectl) {
+      throw new Error(
+        "You do not have kubectl installed. Most likely you need to configure your workflow to initialize connection with Kubernetes cluster."
+      );
+    }
+  } else {
+    process.stdout.write("kubectl: ignored for Cloud integration\n");
+  }
+
   return config;
 }
+
+const isKubectlInstalled = () => {
+  try {
+    taskLib.which("kubectl", true);
+    return true;
+  } catch {
+    return false;
+  }
+};
