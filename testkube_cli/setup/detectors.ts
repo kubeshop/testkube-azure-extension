@@ -1,6 +1,7 @@
+import taskLib = require("azure-pipelines-task-lib/task");
 import * as os from "os";
 import fetch from "node-fetch";
-import { getConfig } from "./config";
+import { getConfig, updateConfig } from "./config";
 
 const architectureMapping: Record<string, string> = {
   x86_64: "x86_64",
@@ -34,7 +35,7 @@ export const detectSystem = () => {
   return system;
 };
 
-export const detectLatestVersion = async () => {
+export const resolveVersion = async () => {
   const config = getConfig();
 
   let version = config.version;
@@ -67,5 +68,15 @@ export const detectLatestVersion = async () => {
     process.stdout.write(`   Latest version: ${version}\n`);
   }
 
+  updateConfig({ version });
   return version;
+};
+
+export const isUnknownTestkubeInstalled = () => {
+  try {
+    taskLib.which("testkube", true);
+    return true;
+  } catch {
+    return false;
+  }
 };
