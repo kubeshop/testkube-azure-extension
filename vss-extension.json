@@ -1,0 +1,32 @@
+{
+  "manifestVersion": 1,
+  "id": "testkube_cli",
+  "name": "Testkube CLI",
+  "version": "0.0.1",
+  "publisher": "kubeshop",
+  "targets": [
+    {
+      "id": "Microsoft.VisualStudio.Services"
+    }
+  ],
+  "description": "CLI setup for trigerring tests with Testkube. Includes one build/release task.",
+  "categories": ["Azure Pipelines"],
+  "icons": {
+    "default": "images/extension-icon.png"
+  },
+  "files": [
+    {
+      "path": "testkube_cli"
+    }
+  ],
+  "contributions": [
+    {
+      "id": "custom-build-release-task",
+      "type": "ms.vss-distributed-task.task",
+      "targets": ["ms.vss-distributed-task.tasks"],
+      "properties": {
+        "name": "testkube_cli"
+      }
+    }
+  ]
+}
