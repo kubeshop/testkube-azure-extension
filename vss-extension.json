@@ -1,9 +1,9 @@
 {
   "manifestVersion": 1,
-  "id": "testkube_cli",
-  "name": "Testkube CLI",
-  "version": "0.0.1",
-  "publisher": "kubeshop",
+  "id": "testkubeclialpha",
+  "name": "Testkube CLI Alpha",
+  "version": "0.0.19",
+  "publisher": "Testkube",
   "targets": [
     {
       "id": "Microsoft.VisualStudio.Services"

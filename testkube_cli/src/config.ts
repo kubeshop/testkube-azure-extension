@@ -16,22 +16,22 @@ let config: Config;
 export function getConfig(): Config {
   if (!config) {
     config = {
-      version: taskLib.getInput("version") || taskLib.getVariable("TK_VERSION"),
-      channel: taskLib.getInput("channel") || taskLib.getVariable("TK_CHANNEL") || "stable",
-      namespace: taskLib.getInput("namespace") || taskLib.getVariable("TK_NAMESPACE") || "testkube",
-      url: taskLib.getInput("url") || taskLib.getVariable("TK_URL") || "testkube.io",
-      organization: taskLib.getInput("organization") || taskLib.getVariable("TK_ORG"),
-      environment: taskLib.getInput("environment") || taskLib.getVariable("TK_ENV"),
-      token: taskLib.getInput("token") || taskLib.getVariable("TK_API_TOKEN"),
+      channel: taskLib.getInput("channel") || "stable",
+      url: taskLib.getInput("url") || "testkube.io",
+      namespace: taskLib.getInput("namespace") || "testkube",
+      version: taskLib.getInput("version"),
+      organization: taskLib.getInput("organization"),
+      environment: taskLib.getInput("environment"),
+      token: taskLib.getInput("token"),
     };
 
     const mode = config.organization || config.environment || config.token ? "cloud" : "kubectl";
     config.mode = mode;
 
     if (mode === "cloud") {
-      process.stdout.write(`Detected mode: cloud connection.\n`);
+      console.log(`Detected mode: cloud connection.\n`);
     } else {
-      process.stdout.write(
+      console.log(
         `Detected mode: kubectl connection. To use Cloud connection instead, provide your 'organization', 'environment' and 'token'.\n`
       );
     }
@@ -46,14 +46,14 @@ export function getConfig(): Config {
     // Detect if there is kubectl installed
     if (mode === "kubectl") {
       const hasKubectl = isKubectlInstalled();
-      process.stdout.write(`kubectl: ${hasKubectl ? "detected" : "not available"}.\n`);
+      console.log(`kubectl: ${hasKubectl ? "detected" : "not available"}.\n`);
       if (!hasKubectl) {
         throw new Error(
           "You do not have kubectl installed. Most likely you need to configure your workflow to initialize connection with Kubernetes cluster."
         );
       }
     } else {
-      process.stdout.write("kubectl: ignored for Cloud integration\n");
+      console.log("kubectl: ignored for Cloud integration\n");
     }
   }
 

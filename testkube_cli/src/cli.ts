@@ -1,21 +1,34 @@
-import taskLib = require("azure-pipelines-task-lib/task");
 import toolLib = require("azure-pipelines-tool-lib/tool");
 import * as fs from "fs";
 import { detectArchitecture, detectSystem, isUnknownTestkubeInstalled, resolveVersion } from "./detectors";
 import { getConfig } from "./config";
 import { execSync } from "child_process";
 
-const setupCLI = async () => {
+export const setupCLI = async () => {
   const version = await resolveVersion();
 
   let testkubePath: string | undefined = toolLib.findLocalTool("testkube", version);
-  const isTestkubeInstalled = testkubePath.length > 0 || isUnknownTestkubeInstalled();
+  if (testkubePath) {
+    console.log("Found Testkube CLI in cache.");
+    toolLib.prependPath(testkubePath);
+  }
+  const isTestkubeInstalled = testkubePath?.length > 0 || isUnknownTestkubeInstalled();
 
   if (!isTestkubeInstalled) {
     testkubePath = await installCLI();
   }
 
-  // TODO: make symlinks for testkube and tk
+  if (fs.existsSync(`${testkubePath}/testkube`)) {
+    fs.rmSync(`${testkubePath}/testkube`);
+  }
+  await fs.promises.symlink(`${testkubePath}/kubectl-testkube`, `${testkubePath}/testkube`);
+  console.log(`Linked CLI as ${testkubePath}/testkube.\n`);
+
+  if (fs.existsSync(`${testkubePath}/tk`)) {
+    fs.rmSync(`${testkubePath}/tk`);
+  }
+  await fs.promises.symlink(`${testkubePath}/kubectl-testkube`, `${testkubePath}/tk`);
+  console.log(`Linked CLI as ${testkubePath}/tk.\n`);
 
   const config = getConfig();
   // Configure the Testkube context
@@ -25,16 +38,16 @@ const setupCLI = async () => {
       : [
           "--api-key",
           config.token!,
-          "--cloud-root-domain",
+          "--root-domain",
           config.url!,
-          "--org",
+          "--org-id",
           config.organization!,
-          "--env",
+          "--env-id",
           config.environment!,
         ];
 
   let command = `testkube set context ${contextArgs.join(" ")}`;
-  let result = execSync(command, { stdio: "inherit" });
+  execSync(command, { stdio: "inherit" });
 };
 
 const installCLI = async () => {
@@ -57,5 +70,5 @@ const installCLI = async () => {
   const cachedPath = await toolLib.cacheDir(extractedPath, "testkube", config.version);
   toolLib.prependPath(cachedPath);
 
-  return extractedPath;
+  return cachedPath;
 };

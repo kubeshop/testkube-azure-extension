@@ -1,6 +1,6 @@
 import taskLib = require("azure-pipelines-task-lib/task");
 import * as os from "os";
-import fetch from "node-fetch";
+import axios from "axios";
 import { getConfig, updateConfig } from "./config";
 
 const architectureMapping: Record<string, string> = {
@@ -46,15 +46,15 @@ export const resolveVersion = async () => {
   } else {
     process.stdout.write(`Detecting the latest version for minimum of "${config.channel}" channel...\n`);
     if (config.channel === "stable") {
-      const releaseResponse = await fetch("https://api.github.com/repos/kubeshop/testkube/releases/latest");
-      const release = (await releaseResponse.json()) as any;
+      const releaseResponse = await axios.get("https://api.github.com/repos/kubeshop/testkube/releases/latest");
+      const release = releaseResponse.data;
       version = release?.tag_name;
     } else {
       const channels = ["stable", config.channel];
       process.stdout.write(`Detecting the latest version for minimum of "${config.channel}" channel...\n`);
 
-      const releasesResponse = await fetch("https://api.github.com/repos/kubeshop/testkube/releases");
-      const releases = (await releasesResponse.json()) as any[];
+      const releasesResponse = await axios.get("https://api.github.com/repos/kubeshop/testkube/releases");
+      const releases = (await releasesResponse.data) as any[];
       const versions = releases.map((release) => ({
         tag: release.tag_name,
         channel: release.tag_name.match(/-([^0-9]+)/)?.[1] || "stable",

@@ -10,12 +10,12 @@
   "version": {
     "Major": 0,
     "Minor": 1,
-    "Patch": 0
+    "Patch": 19
   },
   "instanceNameFormat": "Testkube CLI",
   "inputs": [
     {
-      "name": "orgId",
+      "name": "organization",
       "type": "string",
       "label": "Organization ID",
       "defaultValue": "",
@@ -23,7 +23,7 @@
       "helpMarkDown": "Your Testkube Pro organization ID."
     },
     {
-      "name": "envId",
+      "name": "environment",
       "type": "string",
       "label": "Environment ID",
       "defaultValue": "",
@@ -31,7 +31,7 @@
       "helpMarkDown": "Your Testkube Pro environment ID."
     },
     {
-      "name": "apiToken",
+      "name": "token",
       "type": "string",
       "label": "API Token",
       "defaultValue": "",
@@ -39,7 +39,7 @@
       "helpMarkDown": "Your Testkube Pro API token."
     },
     {
-      "name": "apiUrl",
+      "name": "url",
       "type": "string",
       "label": "API URL",
       "defaultValue": "",
@@ -48,8 +48,8 @@
     }
   ],
   "execution": {
-    "Node": {
-      "target": "index.js"
+    "Node16": {
+      "target": "dist/index.js"
     }
   }
 }
