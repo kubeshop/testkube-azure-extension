@@ -48,6 +48,7 @@ export const setupCLI = async () => {
 
   let command = `testkube set context ${contextArgs.join(" ")}`;
   execSync(command, { stdio: "inherit" });
+  console.log(`\nConfigured Testkube context.\n`);
 };
 
 const installCLI = async () => {
@@ -66,8 +67,11 @@ const installCLI = async () => {
   const artifactUrl = `https://github.com/kubeshop/testkube/releases/download/v${encodedVersion}/testkube_${encodedVerSysArch}.tar.gz`;
 
   const downloadedPath = await toolLib.downloadTool(artifactUrl);
+  console.log(`Downloaded Testkube CLI from ${artifactUrl}.\n`);
   const extractedPath = await toolLib.extractTar(downloadedPath);
+  console.log(`Extracted Testkube CLI to ${extractedPath}.\n`);
   const cachedPath = await toolLib.cacheDir(extractedPath, "testkube", config.version);
+  console.log(`Cached Testkube CLI to ${cachedPath}.\n`);
   toolLib.prependPath(cachedPath);
 
   return cachedPath;
