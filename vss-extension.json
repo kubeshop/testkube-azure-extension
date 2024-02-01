@@ -1,8 +1,8 @@
 {
   "manifestVersion": 1,
-  "id": "testkubeclialpha",
-  "name": "Testkube CLI Alpha",
-  "version": "0.0.19",
+  "id": "testkubecli",
+  "name": "Testkube CLI",
+  "version": "1.0.0",
   "publisher": "Testkube",
   "targets": [
     {
@@ -28,5 +28,6 @@
         "name": "testkube_cli"
       }
     }
-  ]
+  ],
+  "public": true
 }
