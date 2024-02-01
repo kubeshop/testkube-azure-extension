@@ -12,7 +12,7 @@
   "description": "CLI setup for trigerring tests with Testkube. Includes one build/release task.",
   "categories": ["Azure Pipelines"],
   "icons": {
-    "default": "images/extension-icon.png"
+    "default": "assets/extension-icon.png"
   },
   "files": [
     {
@@ -29,5 +29,26 @@
       }
     }
   ],
-  "public": true
+  "public": true,
+  "content": {
+    "details": {
+      "path": "overview.md"
+    },
+    "license": {
+      "path": "LICENSE"
+    }
+  },
+  "links": {
+    "learn": {
+      "uri": "https://docs.testkube.io"
+    },
+    "repository": {
+      "uri": "https://github.com/kubeshop/testkube-azure-extension"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "uri": "https://github.com/kubeshop/testkube-azure-extension"
+  },
+  "tags": ["testkube", "testing", "kubernetes", "ci", "cd"]
 }

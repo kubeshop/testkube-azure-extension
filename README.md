@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/testkube-logo.svg" alt="Testkube Logo" width="80"/>
+  <img src="assets/extension-icon.svg" alt="Testkube Logo" width="80"/>
 </p>
 
 <p align="center">
