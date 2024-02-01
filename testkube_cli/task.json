@@ -1,8 +1,8 @@
 {
   "$schema": "https://raw.githubusercontent.com/Microsoft/azure-pipelines-task-lib/master/tasks.schema.json",
   "id": "2a7c6120-08d7-49de-bc28-8274efc38449",
-  "name": "testkube-cli",
-  "friendlyName": "Testkube CLI",
+  "name": "SetupTestkube",
+  "friendlyName": "Setup Testkube CLI",
   "description": "Setup Testkube CLI for running tests.",
   "helpMarkDown": "",
   "category": "Utility",
@@ -12,7 +12,7 @@
     "Minor": 1,
     "Patch": 19
   },
-  "instanceNameFormat": "Testkube CLI",
+  "instanceNameFormat": "Setup Testkube",
   "inputs": [
     {
       "name": "organization",
@@ -45,6 +45,30 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Custom API URL for self hosted instances of Testkube Pro."
+    },
+    {
+      "name": "debug",
+      "type": "boolean",
+      "label": "Enable Debugging",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Enable stack traces for debugging."
+    },
+    {
+      "name": "version",
+      "type": "string",
+      "label": "Testkube CLI Version",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Leave empty to use the latest version"
+    },
+    {
+      "name": "namespace",
+      "type": "string",
+      "label": "Testkube Namespace",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Specify in which namespace testkube in running"
     }
   ],
   "execution": {
