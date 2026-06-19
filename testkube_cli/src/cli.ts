@@ -4,6 +4,8 @@ import { detectArchitecture, detectSystem, isUnknownTestkubeInstalled, resolveVe
 import { getConfig } from "./config";
 import { execSync } from "child_process";
 
+const legacyVersionBoundary = [2, 4, 0];
+
 export const setupCLI = async () => {
   const version = await resolveVersion();
 
@@ -63,8 +65,9 @@ const installCLI = async () => {
   const encodedVerSysArch = `${encodeURIComponent(config.version)}_${encodeURIComponent(system)}_${encodeURIComponent(
     architecture
   )}`;
+  const releaseTagPrefix = requiresLegacyVersionPrefix(config.version) ? "v" : "";
 
-  const artifactUrl = `https://github.com/kubeshop/testkube/releases/download/v${encodedVersion}/testkube_${encodedVerSysArch}.tar.gz`;
+  const artifactUrl = `https://github.com/kubeshop/testkube/releases/download/${releaseTagPrefix}${encodedVersion}/testkube_${encodedVerSysArch}.tar.gz`;
 
   const downloadedPath = await toolLib.downloadTool(artifactUrl);
   console.log(`Downloaded Testkube CLI from ${artifactUrl}.\n`);
@@ -75,4 +78,25 @@ const installCLI = async () => {
   toolLib.prependPath(cachedPath);
 
   return cachedPath;
+};
+
+const requiresLegacyVersionPrefix = (version: string) => {
+  const versionMatch = version.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/);
+  if (!versionMatch) {
+    return false;
+  }
+
+  const numericVersion = versionMatch.slice(1, 4).map((part) => Number.parseInt(part, 10));
+  return compareVersions(numericVersion, legacyVersionBoundary) <= 0;
+};
+
+const compareVersions = (left: number[], right: number[]) => {
+  for (let versionPartIndex = 0; versionPartIndex < Math.max(left.length, right.length); versionPartIndex += 1) {
+    const difference = (left[versionPartIndex] || 0) - (right[versionPartIndex] || 0);
+    if (difference !== 0) {
+      return difference;
+    }
+  }
+
+  return 0;
 };
