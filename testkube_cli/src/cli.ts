@@ -81,7 +81,7 @@ const installCLI = async () => {
 };
 
 const requiresLegacyVersionPrefix = (version: string) => {
-  const versionMatch = version.match(/^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/);
+  const versionMatch = version.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/);
   if (!versionMatch) {
     return false;
   }
