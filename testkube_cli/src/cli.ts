@@ -91,8 +91,8 @@ const requiresLegacyVersionPrefix = (version: string) => {
 };
 
 const compareVersions = (left: number[], right: number[]) => {
-  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
-    const difference = (left[index] || 0) - (right[index] || 0);
+  for (let versionPartIndex = 0; versionPartIndex < Math.max(left.length, right.length); versionPartIndex += 1) {
+    const difference = (left[versionPartIndex] || 0) - (right[versionPartIndex] || 0);
     if (difference !== 0) {
       return difference;
     }
