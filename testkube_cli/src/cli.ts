@@ -4,6 +4,8 @@ import { detectArchitecture, detectSystem, isUnknownTestkubeInstalled, resolveVe
 import { getConfig } from "./config";
 import { execSync } from "child_process";
 
+const legacyVersionBoundary = [2, 4, 0];
+
 export const setupCLI = async () => {
   const version = await resolveVersion();
 
@@ -79,17 +81,18 @@ const installCLI = async () => {
 };
 
 const requiresLegacyVersionPrefix = (version: string) => {
-  const [major = "0", minor = "0", patch = "0"] = version.split("-")[0].split(".");
+  const versionMatch = version.match(/^(\d+)\.(\d+)\.(\d+)(?:[-+].*)?$/);
+  if (!versionMatch) {
+    return false;
+  }
 
-  const numericVersion = [major, minor, patch].map((part) => Number.parseInt(part, 10));
-  const legacyVersionBoundary = [2, 4, 0];
-
-  return numericVersion.every((part) => Number.isInteger(part)) && compareVersions(numericVersion, legacyVersionBoundary) <= 0;
+  const numericVersion = versionMatch.slice(1, 4).map((part) => Number.parseInt(part, 10));
+  return compareVersions(numericVersion, legacyVersionBoundary) <= 0;
 };
 
 const compareVersions = (left: number[], right: number[]) => {
-  for (let i = 0; i < Math.max(left.length, right.length); i += 1) {
-    const difference = (left[i] || 0) - (right[i] || 0);
+  for (let index = 0; index < Math.max(left.length, right.length); index += 1) {
+    const difference = (left[index] || 0) - (right[index] || 0);
     if (difference !== 0) {
       return difference;
     }
