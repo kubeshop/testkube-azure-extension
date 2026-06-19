@@ -63,8 +63,9 @@ const installCLI = async () => {
   const encodedVerSysArch = `${encodeURIComponent(config.version)}_${encodeURIComponent(system)}_${encodeURIComponent(
     architecture
   )}`;
+  const releaseTagPrefix = requiresLegacyVersionPrefix(config.version) ? "v" : "";
 
-  const artifactUrl = `https://github.com/kubeshop/testkube/releases/download/v${encodedVersion}/testkube_${encodedVerSysArch}.tar.gz`;
+  const artifactUrl = `https://github.com/kubeshop/testkube/releases/download/${releaseTagPrefix}${encodedVersion}/testkube_${encodedVerSysArch}.tar.gz`;
 
   const downloadedPath = await toolLib.downloadTool(artifactUrl);
   console.log(`Downloaded Testkube CLI from ${artifactUrl}.\n`);
@@ -75,4 +76,24 @@ const installCLI = async () => {
   toolLib.prependPath(cachedPath);
 
   return cachedPath;
+};
+
+const requiresLegacyVersionPrefix = (version: string) => {
+  const [major = "0", minor = "0", patch = "0"] = version.split("-")[0].split(".");
+
+  const numericVersion = [major, minor, patch].map((part) => Number.parseInt(part, 10));
+  const legacyVersionBoundary = [2, 4, 0];
+
+  return numericVersion.every((part) => Number.isInteger(part)) && compareVersions(numericVersion, legacyVersionBoundary) <= 0;
+};
+
+const compareVersions = (left: number[], right: number[]) => {
+  for (let i = 0; i < Math.max(left.length, right.length); i += 1) {
+    const difference = (left[i] || 0) - (right[i] || 0);
+    if (difference !== 0) {
+      return difference;
+    }
+  }
+
+  return 0;
 };
