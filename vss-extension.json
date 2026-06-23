@@ -2,7 +2,7 @@
   "manifestVersion": 1,
   "id": "testkubecli",
   "name": "Testkube CLI",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "publisher": "Testkube",
   "targets": [
     {

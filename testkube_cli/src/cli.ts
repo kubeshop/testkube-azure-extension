@@ -65,7 +65,7 @@ const installCLI = async () => {
     architecture
   )}`;
   const releaseTagPrefix = requiresLegacyVersionPrefix(normalizedVersion) ? "v" : "";
-
+  console.log(`Installing Testkube CLI version ${normalizedVersion} for ${system}/${architecture}.\n`);
   const artifactUrl = `https://github.com/kubeshop/testkube/releases/download/${releaseTagPrefix}${encodedVersion}/testkube_${encodedVerSysArch}.tar.gz`;
 
   const downloadedPath = await toolLib.downloadTool(artifactUrl);

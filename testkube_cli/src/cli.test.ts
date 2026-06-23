@@ -27,5 +27,5 @@ test("pre-release and build metadata are parsed correctly around boundary", () =
   assert.equal(requiresLegacyVersionPrefix("2.3.9+build.7"), true);
   assert.equal(requiresLegacyVersionPrefix("2.4.0"), false);
   assert.equal(requiresLegacyVersionPrefix("2.3.9"), true);
-  assert.equal(requiresLegacyVersionPrefix("2.10.1"), false);
+  assert.equal(requiresLegacyVersionPrefix(" 2.10.1 "), false);
 });
