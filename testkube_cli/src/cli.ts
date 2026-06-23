@@ -4,8 +4,6 @@ import { detectArchitecture, detectSystem, isUnknownTestkubeInstalled, resolveVe
 import { getConfig } from "./config";
 import { execSync } from "child_process";
 
-const legacyVersionBoundary = [2, 4, 0];
-
 export const setupCLI = async () => {
   const version = await resolveVersion();
 
@@ -58,14 +56,15 @@ const installCLI = async () => {
   if (!config.version) {
     return;
   }
+  const normalizedVersion = normalizeVersion(config.version);
   const architecture = detectArchitecture();
   const system = detectSystem();
 
-  const encodedVersion = encodeURIComponent(config.version);
-  const encodedVerSysArch = `${encodeURIComponent(config.version)}_${encodeURIComponent(system)}_${encodeURIComponent(
+  const encodedVersion = encodeURIComponent(normalizedVersion);
+  const encodedVerSysArch = `${encodeURIComponent(normalizedVersion)}_${encodeURIComponent(system)}_${encodeURIComponent(
     architecture
   )}`;
-  const releaseTagPrefix = requiresLegacyVersionPrefix(config.version) ? "v" : "";
+  const releaseTagPrefix = requiresLegacyVersionPrefix(normalizedVersion) ? "v" : "";
 
   const artifactUrl = `https://github.com/kubeshop/testkube/releases/download/${releaseTagPrefix}${encodedVersion}/testkube_${encodedVerSysArch}.tar.gz`;
 
@@ -73,30 +72,38 @@ const installCLI = async () => {
   console.log(`Downloaded Testkube CLI from ${artifactUrl}.\n`);
   const extractedPath = await toolLib.extractTar(downloadedPath);
   console.log(`Extracted Testkube CLI to ${extractedPath}.\n`);
-  const cachedPath = await toolLib.cacheDir(extractedPath, "testkube", config.version);
+  const cachedPath = await toolLib.cacheDir(extractedPath, "testkube", normalizedVersion);
   console.log(`Cached Testkube CLI to ${cachedPath}.\n`);
   toolLib.prependPath(cachedPath);
 
   return cachedPath;
 };
 
-const requiresLegacyVersionPrefix = (version: string) => {
-  const versionMatch = version.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?(?:\+([0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*))?$/);
+const normalizeVersion = (version: string) => version.trim().replace(/^v/, "");
+
+export const requiresLegacyVersionPrefix = (version: string) => {
+  const versionMatch = version.match(/^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:[-+].*)?$/);
   if (!versionMatch) {
     return false;
   }
 
-  const numericVersion = versionMatch.slice(1, 4).map((part) => Number.parseInt(part, 10));
-  return compareVersions(numericVersion, legacyVersionBoundary) <= 0;
-};
+  const major = Number.parseInt(versionMatch[1], 10);
+  const minor = Number.parseInt(versionMatch[2], 10);
+  const patch = Number.parseInt(versionMatch[3], 10);
 
-const compareVersions = (left: number[], right: number[]) => {
-  for (let versionPartIndex = 0; versionPartIndex < Math.max(left.length, right.length); versionPartIndex += 1) {
-    const difference = (left[versionPartIndex] || 0) - (right[versionPartIndex] || 0);
-    if (difference !== 0) {
-      return difference;
-    }
+  if (major < 2) {
+    return true;
+  }
+  if (major > 2) {
+    return false;
   }
 
-  return 0;
+  if (minor < 4) {
+    return true;
+  }
+  if (minor > 4) {
+    return false;
+  }
+
+  return patch < 0;
 };
