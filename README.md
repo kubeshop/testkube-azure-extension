@@ -43,7 +43,7 @@ Use it to install Testkube CLI to manage your resources, run tests and test suit
 
 ## Installation
 
-// TODO: add link to extension
+Check our documentation [here](https://docs.testkube.io/articles/azure#azure-devops-extension).
 
 ## Usage
 
