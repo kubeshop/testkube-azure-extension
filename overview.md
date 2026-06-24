@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/extension-icon.svg" alt="Testkube Logo" width="80"/>
+  <img src="assets/extension-icon.png" alt="Testkube Logo" width="80"/>
 </p>
 
 <p align="center">
@@ -65,7 +65,7 @@ stages:
   jobs:
   - job: RunTestkube
     steps:
-      - task: SetupTestkube@1
+      - task: SetupTestkube@2
         inputs:
           organization: '$(TK_ORG_ID)'
           environment: '$(TK_ENV_ID)'
@@ -94,7 +94,7 @@ stages:
   jobs:
   - job: RunTestkube
     steps:
-      - task: SetupTestkube@1
+      - task: SetupTestkube@2
         inputs:
           namespace: 'custom-testkube-namespace'
           url: 'custom-url'
