@@ -7,8 +7,9 @@
   "helpMarkDown": "",
   "category": "Utility",
   "author": "kubeshop",
+  "minimumAgentVersion": "4.265.1",
   "version": {
-    "Major": 1,
+    "Major": 2,
     "Minor": 0,
     "Patch": 0
   },
@@ -72,7 +73,7 @@
     }
   ],
   "execution": {
-    "Node16": {
+    "Node24": {
       "target": "dist/index.js"
     }
   }
