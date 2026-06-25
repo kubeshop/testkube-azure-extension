@@ -11,7 +11,7 @@
   "version": {
     "Major": 2,
     "Minor": 0,
-    "Patch": 0
+    "Patch": 1
   },
   "instanceNameFormat": "Setup Testkube",
   "inputs": [
@@ -46,6 +46,30 @@
       "defaultValue": "",
       "required": false,
       "helpMarkDown": "Custom API URL for self hosted instances of Testkube Pro."
+    },
+    {
+      "name": "urlApiSubdomain",
+      "type": "string",
+      "label": "API URL Subdomain",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Custom API URL subdomain for self hosted instances of Testkube Pro."
+    },
+    {
+      "name": "urlUiSubdomain",
+      "type": "string",
+      "label": "UI URL Subdomain",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Custom UI URL subdomain for self hosted instances of Testkube Pro."
+    },
+    {
+      "name": "urlLogsSubdomain",
+      "type": "string",
+      "label": "Logs URL Subdomain",
+      "defaultValue": "",
+      "required": false,
+      "helpMarkDown": "Custom Logs URL subdomain for self hosted instances of Testkube Pro."
     },
     {
       "name": "debug",

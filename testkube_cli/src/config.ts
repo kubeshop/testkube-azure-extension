@@ -9,6 +9,9 @@ interface Config {
   organization?: string;
   environment?: string;
   token?: string;
+  urlApiSubdomain?: string | null;
+  urlUiSubdomain?: string | null;
+  urlLogsSubdomain?: string | null;
 }
 
 let config: Config;
@@ -23,6 +26,9 @@ export function getConfig(): Config {
       organization: taskLib.getInput("organization"),
       environment: taskLib.getInput("environment"),
       token: taskLib.getInput("token"),
+      urlApiSubdomain: taskLib.getInput("urlApiSubdomain"),
+      urlUiSubdomain: taskLib.getInput("urlUiSubdomain"),
+      urlLogsSubdomain: taskLib.getInput("urlLogsSubdomain"),
     };
 
     const mode = config.organization || config.environment || config.token ? "cloud" : "kubectl";

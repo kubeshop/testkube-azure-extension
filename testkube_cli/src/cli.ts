@@ -44,6 +44,9 @@ export const setupCLI = async () => {
           config.organization!,
           "--env-id",
           config.environment!,
+          ...(config.urlApiSubdomain ? ["--api-prefix", config.urlApiSubdomain] : []),
+          ...(config.urlUiSubdomain ? ["--ui-prefix", config.urlUiSubdomain] : []),
+          ...(config.urlLogsSubdomain ? ["--logs-prefix", config.urlLogsSubdomain] : []),
         ];
 
   let command = `testkube set context ${contextArgs.join(" ")}`;

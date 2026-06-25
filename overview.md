@@ -65,7 +65,7 @@ stages:
   jobs:
   - job: RunTestkube
     steps:
-      - task: SetupTestkube@2
+      - task: SetupTestkube@2.0.1
         inputs:
           organization: '$(TK_ORG_ID)'
           environment: '$(TK_ENV_ID)'
@@ -94,7 +94,7 @@ stages:
   jobs:
   - job: RunTestkube
     steps:
-      - task: SetupTestkube@2
+      - task: SetupTestkube@2.0.1
         inputs:
           namespace: 'custom-testkube-namespace'
           url: 'custom-url'
